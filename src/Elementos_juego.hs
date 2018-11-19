@@ -9,15 +9,20 @@ type Baraja = [Carta]
 
 type Carta= (String, Integer)
 
-creandoCarta :: [String]->[Integer] -> Baraja
-creandoCarta xs yx = [carta | x <- ["Brilo", "Corazon", "Trebol", "Negro"], y <- [1..13], let carta= (x,y)]
+data Mano = Mano { carta1 :: Carta
+                 , carta2 :: Carta
+                 , carta3 :: Carta
+                 , carta4 :: Carta
+                 , carta5 :: Carta
+                 } deriving (Show)
+
+
+
+creandoBaraja :: Baraja
+creandoBaraja = [carta | x <- ["Brilo", "Corazon", "Trebol", "Negro"], y <- [1,2,3,4,5,6,7,11,12,13], let carta= (x,y)] --OJO: quitar 8 9 10
  
 
-{- isInBaraja :: Carta -> Baraja -> Bool
-isInBaraja carta bara = filter (isOrNot) bara 
-            where isOrNot x  
-                        | carta == x = True
-                        | carta /= x = False -}
+
                         
 --addBaraja :: Carta -> [Carta] -> [Carta]
 --addBaraja carta x = carta : x
@@ -25,13 +30,6 @@ isInBaraja carta bara = filter (isOrNot) bara
 
 {- addBaraja :: Carta -> Baraja -> Baraja
 addBaraja x baraja = takeWhile((length baraja) <= 53) filter(isInBaraja x)baraja -}
-
-data Mano = Mano { carta1 :: Carta
-                 , carta2 :: Carta
-                 , carta3 :: Carta
-                 , carta4 :: Carta
-                 , carta5 :: Carta
-                 } 
 
 
 
