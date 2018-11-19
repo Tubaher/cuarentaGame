@@ -1,17 +1,17 @@
 module Elementos_juego where
 
-data Carta = Carta{
-    numero :: Integer,
-    palo :: String 
-}
+{-data Carta = Carta{ numero :: Integer
+                  , palo :: String
+                  }
+-} --No funciona en la funcion creandoCarta, solo funciona con tuplas
+  
 type Baraja = [Carta]
 
-{-creandoCarta ::Integer -> String -> Carta
-creandoCarta x y = Carta(x,y) -}
+type Carta= (String, Integer)
 
-{- creandoCarta :: [String]->[Integer] -> Carta
-creandoCarta xs yx = [Carta | (x <- xs, y <- ys, let x=(x,y))]
- -}
+creandoCarta :: [String]->[Integer] -> Baraja
+creandoCarta xs yx = [carta | x <- ["Brilo", "Corazon", "Trebol", "Negro"], y <- [1..13], let carta= (x,y)]
+ 
 
 {- isInBaraja :: Carta -> Baraja -> Bool
 isInBaraja carta bara = filter (isOrNot) bara 
