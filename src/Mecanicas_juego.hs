@@ -33,7 +33,7 @@ verificarTriunfoInicial [a,b,c,d,e,f]
 
 
 verificarTriunfoInicial :: [Integer] -> Bool 
-verificarTriunfoInicial xs  = isNothing(find (\ t -> snd(t) == 4) (map (\xs -> (head xs, length xs))  (group (sort xs) )))
+verificarTriunfoInicial xs  = isNothing(find (\ t -> snd(t) == 4) ((map (\xs -> (head xs, length xs)) . group . sort) xs ))
                             where isNothing Nothing = False
                                   isNothing x = True
     {-| map (\xs -> length (group(sort xs)) /=4 || map (\xs -> length (group(sort xs)) /=3 = False
