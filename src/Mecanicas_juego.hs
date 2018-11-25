@@ -31,22 +31,29 @@ verificarTriunfoInicial [a,b,c,d,e,f]
     |otherwise  = False
 -}
 
-
+{-
 verificarTriunfoInicial :: [Integer] -> Bool 
 verificarTriunfoInicial xs  = isNothing(find (\ t -> snd(t) == 4) (map (\xs -> (head xs, length xs))  (group (sort xs) )))
                             where isNothing Nothing = False
                                   isNothing x = True
+-}
     {-| map (\xs -> length (group(sort xs)) /=4 || map (\xs -> length (group(sort xs)) /=3 = False
     |otherwise = True-}
 
 
 
-{-
-verificarTriunfoInicial :: [Integer] -> Bool
-    | map (\xs -> length (group(sort xs)) /=4 || map (\xs -> length (group(sort xs)) /=3 = False
-    |otherwise = True
 
--}
+verificarTriunfoInicial :: [Integer] -> Bool
+verificarTriunfoInicial xs  
+    | True `elem` map (\ws -> (length ws) ==4) (group (sort xs)) = True
+    | otherwise = False
+     
+verificarRonda :: [Integer] -> Bool
+verificarRonda xs  
+    | True `elem` map (\ws -> (length ws) ==3) (group (sort xs)) = True
+    | otherwise = False
+     
+
 
 
 
