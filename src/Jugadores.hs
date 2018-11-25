@@ -11,3 +11,12 @@ data Jugador = Jugador {
 
 
 
+botarCarta :: (Mano -> Carta) -> Mano -> Carta
+botarCarta f mano = f mano --La funcion a aplicar es una funcion
+--que me permite elegir una carta
+
+
+
+
+
+
