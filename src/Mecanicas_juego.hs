@@ -2,7 +2,6 @@ module Mecanicas_juego where
 
 import Data.List
 import Elementos_juego
-import Jugadores
 
 {-
 
