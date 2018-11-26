@@ -1,5 +1,7 @@
 module Elementos_juego where
- 
+
+import Data.Maybe
+import qualified Data.List as List 
 data Jugador = Jugador {
     turno :: Integer,
     cartasMano :: Mano,
@@ -33,14 +35,16 @@ type Mesa = [(Carta, Integer)]
 ultimoIndice :: Mesa -> Integer
 ultimoIndice l = foldl (\acc (_,numero) -> if acc>numero then acc else numero) 0 l
 
+ultimoIndiceElem :: Mesa -> Carta
+ultimoIndiceElem mesa = fst(fromMaybe (("brillo",1),-1) (List.find (\(_, indice) -> indice == ultimoIndice mesa) mesa ))
+
 --Esta función resibe una carta y la agrega a la mesa con un contador para tener en cuenta en que orden entró
 botarCartaMesa :: Carta -> Mesa -> Mesa 
 botarCartaMesa c m = (c, ultimoIndice(m)+1) : m 
  
 -- solo realiza la jugada de caida y agrega puntos no retira la carta de la mesa
-caidaMesa :: Carta-> Jugador -> Mesa -> Jugador 
-caidaMesa c jugador{turno = tur, cartasMano = mano, puntos= pts} mesa 
-        | 
+{- caidaMesa :: Carta-> Jugador -> Mesa -> Jugador 
+caidaMesa c jugador{turno = tur, cartasMano = mano, puntos= pts} mesa -} 
 --addBaraja :: Carta -> [Carta] -> [Carta]
 --addBaraja carta x = carta : x
 --addBaraja (x:xs)
