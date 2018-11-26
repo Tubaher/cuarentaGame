@@ -2,11 +2,13 @@ module Elementos_juego where
 
 import Data.Maybe
 import qualified Data.List as List 
+
+
 data Jugador = Jugador {
     turno :: Integer,
     cartasMano :: Mano,
     puntos :: Integer
-}
+} deriving (Show)
 {-data Carta = Carta{ numero :: Integer
                   , palo :: String
                   }
@@ -22,6 +24,11 @@ data Mano = Mano { carta1 :: Carta
                  , carta4 :: Carta
                  , carta5 :: Carta
                  } deriving (Show)
+
+data Game = Game {  jugador1 :: Jugador
+                  , jugador2 :: Jugador
+                  , mesaDeJuego :: Mesa
+                 } deriving (Show)  
 
 
 
