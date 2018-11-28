@@ -17,7 +17,7 @@ data Jugador = Jugador {
     } deriving (Show)
 
 ----------Mano--------------
---En esta estructura guardamos los 
+--En esta estructura linkeamos las cartas de la mano del jugador
 data Mano = Mano { 
     carta1 :: Carta,
     carta2 :: Carta,
@@ -26,6 +26,11 @@ data Mano = Mano {
     carta5 :: Carta
     } deriving (Show)
 
+----------Game-------------
+--En game linkeamos todos los datos que varian durante el juego
+--primero creamos dos jugadores que seran quienes compitan en la
+-- partida, y agregamos una mesa de juego junto con un contador
+-- que varía dependiendo de quien es el turno.
 data Game = Game {  
     jugador1 :: Jugador,
     jugador2 :: Jugador,
@@ -38,12 +43,24 @@ data Game = Game {
                   }
 -} --No funciona en la funcion creandoCarta, solo funciona con tuplas
   
+
+------------ Sinónimos de tipo------------------
+-----------Baraja-------------------
+--Bara es un sinónimo que usaremos para referirnos a una lista de cartas
 type Baraja = [Carta]
 
+-----------Carta-------------------
+--Carta es un sinónimo que usaremos para una dupla de String e Interger
 type Carta = (String, Integer)
 
+-----------Mesa---------------------
+--Mesa es un sinónimo que usaremos para referirnos a una lista de duplas
+--que constarán de una Carta y un Interger
 type Mesa = [(Carta, Integer)] 
 
+
+
+---
 creandoBaraja :: Baraja
 creandoBaraja = [carta | x <- ["Brilo", "Corazon", "Trebol", "Negro"], y <- [1,2,3,4,5,6,7,11,12,13], let carta= (x,y)] --OJO: quitar 8 9 10
  
@@ -51,18 +68,7 @@ creandoBaraja = [carta | x <- ["Brilo", "Corazon", "Trebol", "Negro"], y <- [1,2
 
      
 
-ultimoIndice :: Mesa -> Integer
-ultimoIndice l = foldl (\acc (_,numero) -> if acc>numero then acc else numero) 0 l
 
-ultimoIndiceElem :: Mesa -> Carta
-ultimoIndiceElem mesa = fst(fromMaybe (("brillo",1),-1) (List.find (\(_, indice) -> indice == ultimoIndice mesa) mesa ))
-
---Esta función resibe una carta y la agrega a la mesa con un contador para tener en cuenta en que orden entró
-botarCartaMesa :: Carta -> Mesa -> Mesa 
-botarCartaMesa c m = (c, ultimoIndice(m)+1) : m 
- 
-botarCarta :: Carta -> Game -> Game 
-botarCarta cart gm =  gm
 
 -- solo realiza la jugada de caida y agrega puntos no retira la carta de la mesa
 {- caidaMesa :: Carta-> Jugador -> Mesa -> Jugador 

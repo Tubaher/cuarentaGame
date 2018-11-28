@@ -69,3 +69,15 @@ verificarRonda xs
     -}
 
 
+    ultimoIndice :: Mesa -> Integer
+    ultimoIndice l = foldl (\acc (_,numero) -> if acc>numero then acc else numero) 0 l
+    
+    ultimoIndiceElem :: Mesa -> Carta
+    ultimoIndiceElem mesa = fst(fromMaybe (("brillo",1),-1) (List.find (\(_, indice) -> indice == ultimoIndice mesa) mesa ))
+    
+    --Esta función resibe una carta y la agrega a la mesa con un contador para tener en cuenta en que orden entró
+    botarCartaMesa :: Carta -> Mesa -> Mesa 
+    botarCartaMesa c m = (c, ultimoIndice(m)+1) : m 
+     
+    botarCarta :: Carta -> Game -> Game 
+    botarCarta cart gm =  gm
