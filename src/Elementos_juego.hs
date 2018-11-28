@@ -4,20 +4,20 @@ import Data.Maybe
 import qualified Data.List as List 
 
 
+--Tipos de datos que se userá en el juego
+
+-----------Jugador------------
+-- Lleva cuenta de la cantidad de cartas que el jugador ha levantado
+--también gurda las cartas que el jugador tiene en mano
+--y cuenta los puntos que el jugador gana
 data Jugador = Jugador {
     carton :: Integer,
     cartasMano :: Mano,
     puntos :: Integer
     } deriving (Show)
-{-data Carta = Carta{ numero :: Integer
-                  , palo :: String
-                  }
--} --No funciona en la funcion creandoCarta, solo funciona con tuplas
-  
-type Baraja = [Carta]
 
-type Carta = (String, Integer)
-
+----------Mano--------------
+--En esta estructura guardamos los 
 data Mano = Mano { 
     carta1 :: Carta,
     carta2 :: Carta,
@@ -33,14 +33,23 @@ data Game = Game {
     turno :: Integer 
     } deriving (Show)  
 
+{-data Carta = Carta{ numero :: Integer
+                  , palo :: String
+                  }
+-} --No funciona en la funcion creandoCarta, solo funciona con tuplas
+  
+type Baraja = [Carta]
 
+type Carta = (String, Integer)
+
+type Mesa = [(Carta, Integer)] 
 
 creandoBaraja :: Baraja
 creandoBaraja = [carta | x <- ["Brilo", "Corazon", "Trebol", "Negro"], y <- [1,2,3,4,5,6,7,11,12,13], let carta= (x,y)] --OJO: quitar 8 9 10
  
 
 
-type Mesa = [(Carta, Integer)]      
+     
 
 ultimoIndice :: Mesa -> Integer
 ultimoIndice l = foldl (\acc (_,numero) -> if acc>numero then acc else numero) 0 l
