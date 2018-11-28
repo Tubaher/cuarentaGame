@@ -59,8 +59,8 @@ type Carta = (String, Integer)
 type Mesa = [(Carta, Integer)] 
 
 
-
----
+----------------- Creando Baraja-------------------
+--Función que crea la baraja que usremos en el juego
 creandoBaraja :: Baraja
 creandoBaraja = [carta | x <- ["Brilo", "Corazon", "Trebol", "Negro"], y <- [1,2,3,4,5,6,7,11,12,13], let carta= (x,y)] --OJO: quitar 8 9 10
  
