@@ -5,10 +5,10 @@ import qualified Data.List as List
 
 
 data Jugador = Jugador {
-    turno :: Integer,
+    carton :: Integer,
     cartasMano :: Mano,
     puntos :: Integer
-} deriving (Show)
+    } deriving (Show)
 {-data Carta = Carta{ numero :: Integer
                   , palo :: String
                   }
@@ -18,17 +18,20 @@ type Baraja = [Carta]
 
 type Carta = (String, Integer)
 
-data Mano = Mano { carta1 :: Carta
-                 , carta2 :: Carta
-                 , carta3 :: Carta
-                 , carta4 :: Carta
-                 , carta5 :: Carta
-                 } deriving (Show)
+data Mano = Mano { 
+    carta1 :: Carta,
+    carta2 :: Carta,
+    carta3 :: Carta,
+    carta4 :: Carta,
+    carta5 :: Carta
+    } deriving (Show)
 
-data Game = Game {  jugador1 :: Jugador
-                  , jugador2 :: Jugador
-                  , mesaDeJuego :: Mesa
-                 } deriving (Show)  
+data Game = Game {  
+    jugador1 :: Jugador,
+    jugador2 :: Jugador,
+    mesaDeJuego :: Mesa,
+    turno :: Integer 
+    } deriving (Show)  
 
 
 
@@ -49,6 +52,9 @@ ultimoIndiceElem mesa = fst(fromMaybe (("brillo",1),-1) (List.find (\(_, indice)
 botarCartaMesa :: Carta -> Mesa -> Mesa 
 botarCartaMesa c m = (c, ultimoIndice(m)+1) : m 
  
+botarCarta :: Carta -> Game -> Game 
+botarCarta cart gm =  gm
+
 -- solo realiza la jugada de caida y agrega puntos no retira la carta de la mesa
 {- caidaMesa :: Carta-> Jugador -> Mesa -> Jugador 
 caidaMesa c jugador{turno = tur, cartasMano = mano, puntos= pts} mesa -} 
