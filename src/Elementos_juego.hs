@@ -12,19 +12,19 @@ import qualified Data.List as List
 --y cuenta los puntos que el jugador gana
 data Jugador = Jugador {
     carton :: Integer,
-    cartasMano :: Mano,
+    cartasMano :: Baraja,
     puntos :: Integer
     } deriving (Show)
 
 ----------Mano--------------
 --En esta estructura linkeamos las cartas de la mano del jugador
-data Mano = Mano { 
+{- data Mano = Mano { 
     carta1 :: Carta,
     carta2 :: Carta,
     carta3 :: Carta,
     carta4 :: Carta,
     carta5 :: Carta
-    } deriving (Show)
+    } deriving (Show) -}
 
 ----------Game-------------
 --En game linkeamos todos los datos que varian durante el juego

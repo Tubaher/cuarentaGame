@@ -8,8 +8,8 @@ import qualified Data.List as List
 --Funcion que me permite obtener todos los indices de cada Carta de la Mano y almacenarlos en una lista
 
 
-listaIndices :: Mano -> [Integer]
-listaIndices (Mano{ carta1 = a, carta2 = b, carta3 = c, carta4 =  d, carta5 = e}) = map snd [a,b,c,d,e]
+{- listaIndices :: Mano -> [Integer]
+listaIndices (Mano{ carta1 = a, carta2 = b, carta3 = c, carta4 =  d, carta5 = e}) = map snd [a,b,c,d,e] -}
 
 ----------------- verificarTriunfoInicial-------------------
 --Funcion que me permite verificar si tengo 4 cartas que tengan el mismo indice, si es asi, me devuelve True, en otro caso False
@@ -49,7 +49,12 @@ botarCartaMesa :: Carta -> Mesa -> Mesa
 botarCartaMesa c m = (c, ultimoIndice(m)+1) : m 
 
 ----------------- botarCarta-------------------
---Funcion que me permite botar una carta en Game
+--Funcion que me permite botar una carta del jugador a la mesa
+--sin que acabe su turno
 
 botarCarta :: Carta -> Game -> Game 
-botarCarta cart gm =  gm
+botarCarta card gm@(Game j1@(Jugador _ mano1 _) j2@(Jugador _ mano2 _) board tn)
+            | tn == 1 = gm{mesaDeJuego = (card, ultimoIndice(board)) : board, jugador1 = j1{cartasMano = filter (\x -> x /= card) mano1 }}
+            | otherwise = gm{mesaDeJuego = (card, ultimoIndice(board)) : board, jugador2 = j2{cartasMano = filter (\x -> x /= card) mano2 }}
+
+
