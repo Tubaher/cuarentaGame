@@ -42,35 +42,13 @@ ultimoIndice l = foldl (\acc (_,numero) -> if acc>numero then acc else numero) 0
 ultimoIndiceElem :: Mesa -> Carta
 ultimoIndiceElem mesa = fst(Maybe.fromMaybe (("brillo",1),-1) (List.find (\(_, indice) -> indice == ultimoIndice mesa) mesa ))
 
------------------ botarCartaMesa-------------------   
---Esta función recibe una carta y la agrega a la mesa con un contador para tener en cuenta en que orden entró
-
-botarCartaMesa :: Carta -> Mesa -> Mesa 
-botarCartaMesa c m = (c, ultimoIndice(m)+1) : m 
-
 ----------------- botarCarta-------------------
 --Funcion que me permite botar una carta del jugador a la mesa
 --sin que acabe su turno
 
 botarCarta :: Carta -> Game -> Game 
-<<<<<<< HEAD
-botarCarta cart gm =  gm
-
-acumularCarton :: Carta -> [Carta]
-acumularCarton 
-
-acumularCarton :: Game -> Game
-acumularCarton juego
-    |juego{ snd (fst (last(mesaDeJuego)))}
-
-
-
-acumularCarton juego{jugador1={carton= _, cartasMano= _, puntos= _}, jugador2={carton= _, cartasMano= _, puntos= _}, mesaDeJuego= _, turno= _, }
-=======
 botarCarta card gm@(Game j1@(Jugador _ mano1 _) j2@(Jugador _ mano2 _) board tn)
             | tn == 1 = gm{mesaDeJuego = (card, ultimoIndice(board)) : board, jugador1 = j1{cartasMano = filter (\x -> x /= card) mano1 }}
             | otherwise = gm{mesaDeJuego = (card, ultimoIndice(board)) : board, jugador2 = j2{cartasMano = filter (\x -> x /= card) mano2 }}
 
 
->>>>>>> 54f92f3128b037fc585f083d8d7407d2cf7ccdb7
- 
