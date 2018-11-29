@@ -56,6 +56,7 @@ type Carta = (String, Integer)
 -----------Mesa---------------------
 --Mesa es un sinónimo que usaremos para referirnos a una lista de duplas
 --que constarán de una Carta y un Interger
+--Integer es el indice en el que ha entrado la carta
 type Mesa = [(Carta, Integer)] 
 
 

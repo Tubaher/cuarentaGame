@@ -53,3 +53,14 @@ botarCartaMesa c m = (c, ultimoIndice(m)+1) : m
 
 botarCarta :: Carta -> Game -> Game 
 botarCarta cart gm =  gm
+
+acumularCarton :: Carta -> [Carta]
+acumularCarton 
+
+acumularCarton :: Game -> Game
+acumularCarton juego
+    |juego{ snd (fst (last(mesaDeJuego)))}
+
+
+
+acumularCarton juego{jugador1={carton= _, cartasMano= _, puntos= _}, jugador2={carton= _, cartasMano= _, puntos= _}, mesaDeJuego= _, turno= _, }
