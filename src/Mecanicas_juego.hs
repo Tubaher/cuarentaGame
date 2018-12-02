@@ -43,13 +43,26 @@ ultimoIndiceElem :: Mesa -> Carta
 ultimoIndiceElem mesa = fst(Maybe.fromMaybe (("brillo",1),-1) (List.find (\(_, indice) -> indice == ultimoIndice mesa) mesa ))
 
 ----------------- botarCarta-------------------
---Funcion que me permite botar una carta del jugador a la mesa
---sin que acabe su turno
+--Toma una carta y un Game para realizar la accion de botar una carta en 
+--el tablero de juego que consiste en: agregar la carta en Game-MesaDeJuego y 
+--barrarla de la mano del jugador que la botó
 
 botarCarta :: Carta -> Game -> Game 
-botarCarta card gm@(Game j1@(Jugador _ mano1 _) j2@(Jugador _ mano2 _) board tn)
-            | tn == 1 = gm{mesaDeJuego = (card, ultimoIndice(board)) : board, jugador1 = j1{cartasMano = filter (\x -> x /= card) mano1 }}
-            | otherwise = gm{mesaDeJuego = (card, ultimoIndice(board)) : board, jugador2 = j2{cartasMano = filter (\x -> x /= card) mano2 }}
+botarCarta card gm@(Game j1@(Jugador _ mano1 _) j2@(Jugador _ mano2 _) board tn act)
+            | tn == 1 = gm{mesaDeJuego = (card, ultimoIndice(board)) : board, jugador1 = j1{cartasMano = filter (\x -> x /= card) mano1 }, action = 0}
+            | otherwise = gm{mesaDeJuego = (card, ultimoIndice(board)) : board, jugador2 = j2{cartasMano = filter (\x -> x /= card) mano2 }, action = 0}
+        
+
+equals :: Mesa -> Bool
+equals (x@(cart1,ind1):y@(cart2,ind2):xs) 
+        | ind1 -1 == ind2 =  snd(cart1) == snd(cart2)
+        | otherwise = False
+
+checkCaida :: Game -> Game
+checkCaida gm@(Game j1@(Jugador crt1 _ pts1) j2@(Jugador crt2 _ pts2) board@(x:y:xs) tn act) 
+            | tn == 1 = if equals(board) then gm{jugador1 = j1{carton = crt1 +2 , puntos = pts1 +2},mesaDeJuego = xs, action = 1} else gm
+            | otherwise = if equals(board) then gm{jugador2 = j2{carton = crt2 +2 , puntos = pts2 +2},mesaDeJuego = xs,  action = 1} else gm
+
 
 {-
 acumularCarton :: Game -> Game
