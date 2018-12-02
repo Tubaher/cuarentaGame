@@ -62,3 +62,95 @@ checkCaida :: Game -> Game
 checkCaida gm@(Game j1@(Jugador crt1 _ pts1) j2@(Jugador crt2 _ pts2) board@(x:y:xs) tn act) 
             | tn == 1 = if equals(board) then gm{jugador1 = j1{carton = crt1 +2 , puntos = pts1 +2},mesaDeJuego = xs, action = 1} else gm
             | otherwise = if equals(board) then gm{jugador2 = j2{carton = crt2 +2 , puntos = pts2 +2},mesaDeJuego = xs,  action = 1} else gm
+
+
+{-
+acumularCarton :: Game -> Game
+acumularCarton gm@(Game j1@(Jugador contcarton1 _ _), j2@(Jugador contcarton2 _ _) board tn)
+    | tn==1 && (snd(fst(last(board))) `elem` map(\(x:xs) -> snd(fst(tail(x)))+ snd(fst(tail(xs)))) (board) || (snd(fst(last(board))) `elem` map(\(xs) -> snd(fst(tail(xs)))) (board) = 
+    
+    
+    snd(fst(last(board))) -}
+{-
+acumularCarton :: Game -> Game
+acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn)
+    | tn==1 && (snd(fst(last(board))) `elem` map(\(x:xs) -> snd(fst(x)) + (snd(fst xs))) (tail board)) || (snd(fst(last(board))) `elem` map(\ xs -> snd(fst xs)) (tail board)) = gm{jugador1 = j1{carton = (+3) contcarton1}}
+    | tn==2 && (snd(fst(last(board))) `elem` map(\(x:xs) -> snd(fst(x)) + (snd(fst xs))) (tail board)) || (snd(fst(last(board))) `elem` map(\ xs -> snd(fst xs)) (tail board)) = gm{jugador1 = j1{carton = (+3) contcarton1}}
+    | otherwise gm=gm
+-}
+{-
+acumularCarton :: Game -> Game
+acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn)
+    | tn==1 && (snd(fst(last(board))) `elem` map(\(x:xs) a -> snd(fst(x)) + (snd(fst a)) | a <- xs) (init board)) || (snd(fst(last(board))) `elem` map(\ xs -> snd(fst xs)) (tail board)) = gm{jugador1 = j1{carton = (+3) contcarton1}}
+    | tn==2 && (snd(fst(last(board))) `elem` map(\(x:xs) a -> snd(fst(x)) + (snd(fst a)) | a <- xs) (init board)) || (snd(fst(last(board))) `elem` map(\ xs -> snd(fst xs)) (tail board)) = gm{jugador2 = j2{carton = (+3) contcarton2}}
+    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=turno}
+-}
+
+
+{- acumularCarton :: Game -> Game
+acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn)
+    | tn==1 && (snd(fst(last(board))) `elem` map(\(x:xs) -> snd(fst(x)) + (snd(fst map(\(x:xs) -> x)))) (init board)) || (snd(fst(last(board))) `elem` map(\ xs -> snd(fst xs)) (tail board)) = gm{jugador1 = j1{carton = (+3) contcarton1}}
+    | tn==2 && (snd(fst(last(board))) `elem` map(\(x:xs) -> snd(fst(x)) + (snd(fst map(\(x:xs) -> x)))) (init board)) || (snd(fst(last(board))) `elem` map(\ xs -> snd(fst xs)) (tail board)) = gm{jugador2 = j2{carton = (+3) contcarton2}}
+    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=turno}
+ -}
+
+sumas :: Carta -> Baraja -> [[Carta]]
+sumas c mazo = quitarReciprocos([[x,y] | x<-mazo, y<-mazo, x /= y, snd(x) + snd(y) == snd(c), snd(x) + snd(y) <= 7])
+        where quitarReciprocos l@(x:xs) = x : quitarReciprocos(filter (\duo -> duo /= reverse(x)) xs)  
+{-
+acumularCarton :: Game -> Game
+acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn)
+    | tn==1 && sumas(fst(last(board)), map(\x -> fst x) init(board)) /= [] = gm{jugador1 = j1{carton = (+3) contcarton1}, mesaDeJuego= takeWhile(\= head(sumas(fst(last(board)), map(\x -> fst x) init(board)))) fst(board)}
+    
+    {-(snd(fst(last(board))) `elem` map(\(x:xs) -> snd(fst(x)) + (snd(fst map(\(x:xs) -> x)))) (init board)) || (snd(fst(last(board))) `elem` map(\ xs -> snd(fst xs)) (tail board)) = gm{jugador1 = j1{carton = (+3) contcarton1}}
+    | tn==2 && (snd(fst(last(board))) `elem` map(\(x:xs) -> snd(fst(x)) + (snd(fst map(\(x:xs) -> x)))) (init board)) || (snd(fst(last(board))) `elem` map(\ xs -> snd(fst xs)) (tail board)) = gm{jugador2 = j2{carton = (+3) contcarton2}} -}
+    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=turno}
+-}
+
+{-
+acumularCarton :: Game -> Game
+acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn)
+    | tn==1 && length(lista_lista_cartas) /=0 = gm{jugador1 = j1{carton = (+3) contcarton1}, mesaDeJuego= takeWhile(/= c1) map(\(a,b) -> a) (init(board)) && takeWhile(/= c2) map(\(a,b) -> a) (init(board))}
+    | tn==2 && length(lista_lista_cartas) /=0 = gm{jugador2 = j2{carton = (+3) contcarton2}, mesaDeJuego= takeWhile(/= c1) map(\(a,b) -> a) (init(board)) && takeWhile(/= c2) map(\(a,b) -> a) (init(board))}
+    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=tn}
+    where lista_lista_cartas = sumas (card) (pack)
+          card = (\(a,b) -> a) (last(board))
+          pack = map(\(a,b) -> a) (init(board))
+          c1 = head(head(lista_lista_cartas))
+          c2 = (head(lista_lista_cartas))!!1
+-}
+
+acumularCarton :: Game -> Game
+acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn)
+    | tn==1 && length(lista_lista_cartas) /=0 = gm{jugador1 = j1{carton = (+3) contcarton1}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board) }
+    | tn==2 && length(lista_lista_cartas) /=0 = gm{jugador2 = j2{carton = (+3) contcarton2}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board) }
+    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=tn}
+    where lista_lista_cartas = sumas (card) (pack)
+          card = (\(a,b) -> a) (last(board))
+          pack = map(\(a,b) -> a) (init(board))
+          c1 = head(head(lista_lista_cartas))
+          c2 = (head(lista_lista_cartas))!!1
+ 
+verificarSiEnMesa :: Carta -> Carta -> Carta -> Mesa -> Mesa
+verificarSiEnMesa card1 card2 card3 (x:xs)
+    | card1 /= fst x && card2 /= fst x  && card3 /= fst x = x : verificarSiEnMesa card1 card2 card3 xs
+    | otherwise = verificar
+    where verificar = verificarSiEnMesa card1 card2 card3 xs
+
+limpiarMesa :: Game -> Game
+limpiarMesa gm@(Game j1@(Jugador contcarton1 _ points1) j2@(Jugador contcarton2 _ points2) board tn)
+    | tn==1 && length(lista_lista_cartas) /=0 && length(board) ==3 = gm{jugador1 = j1{carton = (+3) contcarton1, puntos = (+2) points1}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board) }
+    | tn==2 && length(lista_lista_cartas) /=0 && length(board) ==3 = gm{jugador2 = j2{carton = (+3) contcarton2, puntos = (+2) points2}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board) }
+    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=tn}
+    where lista_lista_cartas = sumas (card) (pack)
+          card = (\(a,b) -> a) (last(board))
+          pack = map(\(a,b) -> a) (init(board))
+          c1 = head(head(lista_lista_cartas))
+          c2 = (head(lista_lista_cartas))!!1
+
+cartasSiguientes :: Mesa -> Integer -> Mesa
+cartasSiguientes (x:xs) a
+    | (\((a,b),c)  -> b) (last(xs)) == (+a) (\((a,b),c) -> b) x = x : cartasSiguientes xs a+1
+    | otherwise = call_again
+    where call_again = cartasSiguientes xs a
+
