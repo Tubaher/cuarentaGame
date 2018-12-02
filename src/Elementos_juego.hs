@@ -35,7 +35,8 @@ data Game = Game {
     jugador1 :: Jugador,
     jugador2 :: Jugador,
     mesaDeJuego :: Mesa,
-    turno :: Integer 
+    turno :: Integer,
+    action :: Integer 
     } deriving (Show)  
 
 {-data Carta = Carta{ numero :: Integer
