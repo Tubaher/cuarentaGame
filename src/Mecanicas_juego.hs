@@ -135,9 +135,26 @@ limpiarMesa gm@(Game j1@(Jugador contcarton1 _ points1) j2@(Jugador contcarton2 
           c1 = head(head(lista_lista_cartas))
           c2 = (head(lista_lista_cartas))!!1
 
+{-
 cartasSiguientes :: Mesa -> Integer -> Mesa
-cartasSiguientes (x:xs) a
-    | (\((a,b),c)  -> b) (last(xs)) == (+a) (\((a,b),c) -> b) x = x : cartasSiguientes xs a+1
+cartasSiguientes (x:xs) sumador
+    | ((\((a,b),c)  -> b) (last(xs)) + sumador == (\((a,b),c)  -> b) x ) = x : cartasSiguientes (xs) (sumador+1)
     | otherwise = call_again
-    where call_again = cartasSiguientes xs a
+    where call_again = cartasSiguientes xs sumador
+-}
+    --let prueba=[(("Brillo", 5), 2), (("Corazon", 6), 2), (("Trebol",7),3), (("Brillo",1),4), (("Brillo",11),6), (("Corazon", 4), 5)]
+
+--Esta funcion me devuelve en cada las cartas superiores que me puedo llevar (hasta la carta numero 7) (Integer =1)
+cartasSiguientes :: Mesa -> Integer -> Mesa
+cartasSiguientes (x:xs) sumador
+    | ((\((a,b),c)  -> b) (last(xs)) + sumador == (\((a,b),c)  -> b) x ) = x : cartasSiguientes (xs) (sumador+1)
+    | otherwise = call_again
+    where call_again = cartasSiguientes xs sumador
+
+--Si cartasSiguiente de devuelve una lista cuyo ultimo elemento es la carta 7, ahora invoca a verificar JQK (Integer=4 porque 7+4=11)
+verificarJQK :: Mesa -> Mesa -> Integer -> Mesa
+verificarJQK (x:xs) lista_con7 sumador
+    | (((\((a,b),c)  -> b) (last(lista_con7)) ) == 7) && (((\((a,b),c)  -> b) (last(lista_con7)) + sumador == (\((a,b),c)  -> b) x )) = x : verificarJQK (xs) (lista_con7) (sumador+1)
+    |otherwise = call_again1 
+    where call_again1 = verificarJQK  xs lista_con7 sumador
 
