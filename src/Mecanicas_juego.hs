@@ -121,3 +121,6 @@ limpiaMesa gm@(Game _ _  board tn act _)
            actTo1 gameTmp@(Game _ _ _ _ _ _) =  gameTmp{action = 1}
 
 
+jugadaMaster ::Carta -> Game -> Game
+jugadaMaster card gm = cambiarTurno(limpiaMesa(checkCaida(botarCarta card gm)))
+        where cambiarTurno game@(Game _ _ _ tn _ _) = if tn ==1 then game{turno = 2} else game{turno = 1}
