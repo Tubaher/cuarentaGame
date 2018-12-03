@@ -96,7 +96,12 @@ acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _
 
 sumas :: Carta -> Baraja -> [[Carta]]
 sumas c mazo = quitarReciprocos([[x,y] | x<-mazo, y<-mazo, x /= y, snd(x) + snd(y) == snd(c), snd(x) + snd(y) <= 7])
-        where quitarReciprocos l@(x:xs) = x : quitarReciprocos(filter (\duo -> duo /= reverse(x)) xs)  
+        where   quitarReciprocos [] = []
+                quitarReciprocos l@(x:xs) = x : quitarReciprocos(filter (\duo -> duo /= reverse(x)) xs)  
+
+deMesaBaraja :: Mesa -> Baraja
+deMesaBaraja [] = []
+deMesaBaraja board = map (fst) board
 {-
 acumularCarton :: Game -> Game
 acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn)
@@ -120,31 +125,49 @@ acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _
           c2 = (head(lista_lista_cartas))!!1
 -}
 
+
+{- ACUMULAR CARTON ORIGINAL
 acumularCarton :: Game -> Game
-acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn)
-    | tn==1 && length(lista_lista_cartas) /=0 = gm{jugador1 = j1{carton = (+3) contcarton1}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board) }
-    | tn==2 && length(lista_lista_cartas) /=0 = gm{jugador2 = j2{carton = (+3) contcarton2}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board) }
-    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=tn}
+acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn act)
+    | tn==1 && act == 0 && length(lista_lista_cartas) /=0 = gm{jugador1 = j1{carton = (+3) contcarton1}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board), action=1 }
+    | tn==2 && act == 0 && length(lista_lista_cartas) /=0 = gm{jugador2 = j2{carton = (+3) contcarton2}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board), action=1 }
+    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=tn, action=act}
     where lista_lista_cartas = sumas (card) (pack)
           card = (\(a,b) -> a) (last(board))
           pack = map(\(a,b) -> a) (init(board))
           c1 = head(head(lista_lista_cartas))
           c2 = (head(lista_lista_cartas))!!1
- 
+-}
+
+--Compuesta
+acumularCarton :: Game -> Game
+acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn act)
+    | tn==1 && act == 0 && length(lista_lista_cartas) /=0 = gm{jugador1 = j1{carton = (+3) contcarton1}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board), action=1 }
+    | tn==2 && act == 0 && length(lista_lista_cartas) /=0 = gm{jugador2 = j2{carton = (+3) contcarton2}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board), action=1 }
+    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=tn, action=act}
+    where lista_lista_cartas = sumas (card) (pack)
+          card = (\(a,b) -> a) (head(board))
+          pack = map(\(a,b) -> a) (tail(board))
+          c1 = head(head(lista_lista_cartas))
+          c2 = (head(lista_lista_cartas))!!1
+          
+          
+--Compuesta
 verificarSiEnMesa :: Carta -> Carta -> Carta -> Mesa -> Mesa
 verificarSiEnMesa card1 card2 card3 (x:xs)
     | card1 /= fst x && card2 /= fst x  && card3 /= fst x = x : verificarSiEnMesa card1 card2 card3 xs
     | otherwise = verificar
     where verificar = verificarSiEnMesa card1 card2 card3 xs
 
+--COmpuesta
 limpiarMesa :: Game -> Game
-limpiarMesa gm@(Game j1@(Jugador contcarton1 _ points1) j2@(Jugador contcarton2 _ points2) board tn)
-    | tn==1 && length(lista_lista_cartas) /=0 && length(board) ==3 = gm{jugador1 = j1{carton = (+3) contcarton1, puntos = (+2) points1}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board) }
-    | tn==2 && length(lista_lista_cartas) /=0 && length(board) ==3 = gm{jugador2 = j2{carton = (+3) contcarton2, puntos = (+2) points2}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board) }
-    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=tn}
+limpiarMesa gm@(Game j1@(Jugador contcarton1 _ points1) j2@(Jugador contcarton2 _ points2) board tn act)
+    | tn==1 && act==0 && length(lista_lista_cartas) /=0 && length(board) ==3 = gm{jugador1 = j1{carton = (+3) contcarton1, puntos = (+2) points1}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board), action=1 }
+    | tn==2 && act==0 && length(lista_lista_cartas) /=0 && length(board) ==3 = gm{jugador2 = j2{carton = (+3) contcarton2, puntos = (+2) points2}, mesaDeJuego= verificarSiEnMesa (c1) (c2) (card) (board), action=1 }
+    | otherwise = gm{jugador1=j1{carton=contcarton1}, jugador2=j2{carton=contcarton2}, mesaDeJuego=board, turno=tn, action=act}
     where lista_lista_cartas = sumas (card) (pack)
-          card = (\(a,b) -> a) (last(board))
-          pack = map(\(a,b) -> a) (init(board))
+          card = (\(a,b) -> a) (head(board))
+          pack = map(\(a,b) -> a) (tail(board))
           c1 = head(head(lista_lista_cartas))
           c2 = (head(lista_lista_cartas))!!1
 
@@ -155,19 +178,89 @@ cartasSiguientes (x:xs) sumador
     | otherwise = call_again
     where call_again = cartasSiguientes xs sumador
 -}
-    --let prueba=[(("Brillo", 5), 2), (("Corazon", 6), 2), (("Trebol",7),3), (("Brillo",1),4), (("Brillo",11),6), (("Corazon", 4), 5)]
-
+    --let prueba=[(("Corazon", 4), 5), (("Corazon", 6), 2), (("Brillo", 5), 2), (("Trebol",7),3), (("Brillo",1),4), (("Brillo",11),6) ]
+        --let prueba=[(("Corazon", 4), 5), (("Brillo", 5), 2), (("Trebol",7),3), (("Corazon", 6), 2), (("Brillo",1),4), (("Brillo",11),6) ]
 --Esta funcion me devuelve en cada las cartas superiores que me puedo llevar (hasta la carta numero 7) (Integer =1)
+
+{-
 cartasSiguientes :: Mesa -> Integer -> Mesa
-cartasSiguientes (x:xs) sumador
-    | ((\((a,b),c)  -> b) (last(xs)) + sumador == (\((a,b),c)  -> b) x ) = x : cartasSiguientes (xs) (sumador+1)
+cartasSiguientes j@(x:[]) sumador = [] 
+cartasSiguientes j@(x:xs) sumador
+    | ((\((a,b),c)  -> b) (last(xs)) + sumador == (\((a,b),c)  -> b) x ) = x : cartasSiguientes (j) (sumador+1)
     | otherwise = call_again
     where call_again = cartasSiguientes xs sumador
+-}
 
+{- comparar:: Integer -> Mesa -> (Carta, Integer)
+comparar x (y:ys) = if  x == (\((a,b),c)->b) y then y else comparar x ys
+
+cartasSiguientes :: Mesa -> Mesa
+cartasSiguientes board = filter (`elem` lista_nueva) board
+    where lista_numeros = map(+ ((\((a,b),c) -> b) (head board))) [1..6]
+          lista_nueva= comparar ([x | x<-lista_numeros]) (board) -}
+{- 
+          checkCaida :: Game -> Game
+          checkCaida gm@(Game j1@(Jugador crt1 _ pts1) j2@(Jugador crt2 _ pts2) board@(x:y:xs) tn act) 
+                      | tn == 1 = if equals(board) then gm{jugador1 = j1{carton = crt1 +2 , puntos = pts1 +2},mesaDeJuego = xs, action = 1} else gm
+                      | otherwise = if equals(board) then gm{jugador2 = j2{carton = crt2 +2 , puntos = pts2 +2},mesaDeJuego = xs,  action = 1} else gm -}
+
+                      
+encontrarCartaIdentica :: Carta -> Mesa -> Integer
+encontrarCartaIdentica _ [] = 0
+encontrarCartaIdentica (palo,ind) board2 = snd(head(filter(\((_,num),_) -> num == ind) board2))
+
+encontrarCartaSuma :: Carta -> Mesa -> [Integer]
+encontrarCartaSuma _ [] = []
+encontrarCartaSuma card board
+            | length(board) == 1 = []
+            | otherwise =  map (`encontrarCartaIdentica` board)  (head(sumas card (deMesaBaraja board)))  
+
+
+
+llevarCartonEscalera :: Game -> Game 
+llevarCartonEscalera gm@(Game j1@(Jugador crt1 _ _) j2@(Jugador crt2 _ _) board@(x:xs) tn _)
+            | tn == 1 = case aplicaPrimero x xs of 0 -> gm
+                                                   1 -> gm{board = foldl eliminarCartaMesaInd xs (indicesEscalera x xs ++ encontrarCartaSuma x xs) , j1{ carton = length(indicesEscalera x xs : encontrarCartaSuma x xs) + crt1 + 1} }   --Eliminar cartaMesa debe coger una Mesa y carta
+                                                   2 -> gm{board = foldl eliminarCartaMesaInd xs (indicesEscalera x xs ++ (encontrarCartaIdentica x xs) : [] ), j1{ carton = length(indicesEscalera x xs ++ (encontrarCartaIdentica x xs) : [] ) + crt1 + 1} }
+            | otherwise = case aplicaPrimero x xs of 0 -> gm
+                                                     1 -> gm{board = foldl eliminarCartaMesaInd xs (indicesEscalera x xs ++ encontrarCartaSuma x xs) , j2{ carton = length(indicesEscalera x xs : encontrarCartaSuma x xs) + crt2 + 1} }   --Eliminar cartaMesa debe coger una Mesa y carta
+                                                     2 -> gm{board = foldl eliminarCartaMesaInd xs (indicesEscalera x xs ++ (encontrarCartaIdentica x xs) : [] ), j2{ carton = length(indicesEscalera x xs ++ (encontrarCartaIdentica x xs) : [] ) + crt2 + 1} }
+            where aplicaPrimero card tablero 
+                        | encontrarCartaSuma == [] = if encontrarCartaIdentica == 0 then 3 else 2
+                        | otherwise = 1
+
+
+
+    -- | ((\((a,b),c) -> b) x  + map(\a ->a) [1..6]) `elem` map(\((a,b),c) -> b)xs = x
+    -- | map(\a->a)
+    -- | map( map(\a ->a) lista_numeros  `elem`) map(\((a,b),c)->b)xs = x
+     -- | otherwise =[] 
+    
+
+{-
+ordenarMesa :: Mesa -> Mesa
+ordenarMesa (x: x1: xs)
+    | (\((a,b),c -> b)) x1 < ordenarMesa xs = x :
+
+    sort((\((a,b),c)->b) xs)
+-}
+
+{-
+cartasSiguientes :: Mesa -> Integer -> Mesa
+--cartasSiguientes [] sumador = []
+cartasSiguientes (x:[]) sumador =[]
+cartasSiguientes (x:xs) sumador
+    | ((\((a,b),c)  -> b) (x) + sumador == (\((a,b),c)  -> b) x ) = x : cartasSiguientes (xs) (sumador+1)
+    | otherwise = call_again
+    where call_again = cartasSiguientes xs sumador
+-}
+    
 --Si cartasSiguiente de devuelve una lista cuyo ultimo elemento es la carta 7, ahora invoca a verificar JQK (Integer=4 porque 7+4=11)
+{- FUncion original
 verificarJQK :: Mesa -> Mesa -> Integer -> Mesa
 verificarJQK (x:xs) lista_con7 sumador
-    | (((\((a,b),c)  -> b) (last(lista_con7)) ) == 7) && (((\((a,b),c)  -> b) (last(lista_con7)) + sumador == (\((a,b),c)  -> b) x )) = x : verificarJQK (xs) (lista_con7) (sumador+1)
+    | (((\((a,b),c)  -> b) (last(lista_con7)) ) == 7) && (((\((a,b),c)  -> b) (last(lista_con7)) + sumador == (\((a,b),c)  -> b) x )) && (sumador<=6) = x : verificarJQK (xs) (lista_con7) (sumador+1)
     |otherwise = call_again1 
     where call_again1 = verificarJQK  xs lista_con7 sumador
+-}
 
