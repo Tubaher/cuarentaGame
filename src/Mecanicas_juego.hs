@@ -86,6 +86,7 @@ encontrarCartaSuma card board
 
 
 
+
 llevarCartonEscalera :: Game -> Game 
 llevarCartonEscalera gm@(Game j1@(Jugador crt1 _ _) j2@(Jugador crt2 _ _) board@(x:xs) tn _ _)
             | tn == 1 = case aplicaPrimero x xs of 0 -> gm

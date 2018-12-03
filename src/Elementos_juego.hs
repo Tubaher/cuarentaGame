@@ -16,15 +16,6 @@ data Jugador = Jugador {
     puntos :: Integer
     } deriving (Show)
 
-----------Mano--------------
---En esta estructura linkeamos las cartas de la mano del jugador
-{- data Mano = Mano { 
-    carta1 :: Carta,
-    carta2 :: Carta,
-    carta3 :: Carta,
-    carta4 :: Carta,
-    carta5 :: Carta
-    } deriving (Show) -}
 
 ----------Game-------------
 --En game linkeamos todos los datos que varian durante el juego
@@ -69,16 +60,3 @@ creandoBaraja = [carta | x <- ["Brilo", "Corazon", "Trebol", "Negro"], y <- [1,2
  
 
 
-     
-
-
-
--- solo realiza la jugada de caida y agrega puntos no retira la carta de la mesa
-{- caidaMesa :: Carta-> Jugador -> Mesa -> Jugador 
-caidaMesa c jugador{turno = tur, cartasMano = mano, puntos= pts} mesa -} 
---addBaraja :: Carta -> [Carta] -> [Carta]
---addBaraja carta x = carta : x
---addBaraja (x:xs)
-
-{- addBaraja :: Carta -> Baraja -> Baraja
-addBaraja x baraja = takeWhile((length baraja) <= 53) filter(isInBaraja x)baraja -}
