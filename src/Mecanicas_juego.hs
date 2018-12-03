@@ -34,7 +34,7 @@ verificarRonda xs
 --Funcion que me permite obtener el indice de la ultima carta que ingresa a la mesa
 
 ultimoIndice :: Mesa -> Integer
-ultimoIndice l = foldl (\acc (_,numero) -> if acc>numero then acc else numero) 0 l
+ultimoIndice l = (foldl (\acc (_,numero) -> if acc>numero then acc else numero) 0 l)+1
 
 ----------------- ultimoIndiceElem-------------------
 --Funcion que me devuelve la carta que corresponde al ultimo indice
@@ -124,3 +124,6 @@ limpiaMesa gm@(Game _ _  board tn act _)
 jugadaMaster ::Carta -> Game -> Game
 jugadaMaster card gm = cambiarTurno(limpiaMesa(checkCaida(botarCarta card gm)))
         where cambiarTurno game@(Game _ _ _ tn _ _) = if tn ==1 then game{turno = 2} else game{turno = 1}
+
+        {- let pruebaGame = Game{jugador1 = Jugador{carton = 4 , cartasMano = [("Brillo", 1), ("Brillo", 5), ("Corazon", 4), ("Trebol", 3), ("Negro", 2)], puntos = 6}, jugador2 =Jugador{carton = 4 , cartasMano = [("Brillo", 1), ("Brillo", 5), ("Corazon", 4), ("Trebol", 3), ("Negro", 2)], puntos = 6}, mesaDeJuego = [ (("Corazon", 5),7), (("Negro", 4),5)], turno = 1, action = 0, mazoDeCartas = [("Brillo", 1), ("Brillo", 5), ("Corazon", 4), ("Trebol", 3), ("Negro", 2)] } -}
+        {- let cartaPrueba = ("Brillo", 5) -}
