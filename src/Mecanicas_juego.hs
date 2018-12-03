@@ -63,40 +63,61 @@ checkCaida gm@(Game j1@(Jugador crt1 _ pts1) j2@(Jugador crt2 _ pts2) board@(x:y
             | tn == 1 = if equals(board) then gm{jugador1 = j1{carton = crt1 +2 , puntos = pts1 +2},mesaDeJuego = xs, action = 1} else gm
             | otherwise = if equals(board) then gm{jugador2 = j2{carton = crt2 +2 , puntos = pts2 +2},mesaDeJuego = xs,  action = 1} else gm
 
-
-sumas :: Carta -> Baraja -> [[Carta]]
-sumas c mazo = quitarReciprocos([[x,y] | x<-mazo, y<-mazo, x /= y, snd(x) + snd(y) == snd(c), snd(x) + snd(y) <= 7])
+-----------------sumas------------
+--devuelve una lista de listas de 2 elementos que son cartas que pueden generar la suma de un elemento
+sumas :: CartaEnMesa -> Mesa -> [[CartaEnMesa]]
+sumas _ [] = []
+sumas c@(card, ind) mesa = quitarReciprocos([[x,y] | x<-mesa, y<-mesa, fst(x) /= fst(y), snd(fst(x)) + snd(fst(y)) == snd(card), snd(fst(x)) + snd(fst(y)) <= 7])
         where   quitarReciprocos [] = []
                 quitarReciprocos l@(x:xs) = x : quitarReciprocos(filter (\duo -> duo /= reverse(x)) xs)  
 
-deMesaBaraja :: Mesa -> Baraja
-deMesaBaraja [] = []
-deMesaBaraja board = map (fst) board
-
                       
-encontrarCartaIdentica :: Carta -> Mesa -> Integer
+encontrarCartaIdentica :: CartaEnMesa -> Mesa -> Integer
 encontrarCartaIdentica _ [] = 0
-encontrarCartaIdentica (palo,ind) board2 = snd(head(filter(\((_,num),_) -> num == ind) board2))
+encontrarCartaIdentica ((_,val),ind) board2
+            |  filter(\((_,num),_) -> num == val) board2 == [] = 0
+            | otherwise = snd(head(filter(\((_,num),_) -> num == val) board2)) 
 
-encontrarCartaSuma :: Carta -> Mesa -> [Integer]
+encontrarCartaSuma :: CartaEnMesa -> Mesa -> [Integer]
 encontrarCartaSuma _ [] = []
-encontrarCartaSuma card board
+encontrarCartaSuma cardMesa board
             | length(board) == 1 = []
-            | otherwise =  map (`encontrarCartaIdentica` board)  (head(sumas card (deMesaBaraja board)))  
+            | otherwise = if sumas cardMesa board == [] then [] else map (`encontrarCartaIdentica` board)  (head(sumas cardMesa board))  
 
+indicesEscalera :: CartaEnMesa -> Mesa -> [Integer]
+indicesEscalera _ [] = []
+indicesEscalera cm@(card@(s,val),ind) m
+            | val <7 = snd(head(if filter (\((_,valueI), _) -> succ val == valueI) m == [] then [(card,0)] else filter (\((_,valueI), _) -> succ val == valueI) m)) : indicesEscalera ((s,succ val), ind) m
+            | (val >= 7) && (val < 10)= snd(head(if filter (\((_,valueI), _) -> succ val == valueI) m == [] then [(card,0)] else filter (\((_,valueI), _) -> (succ val) +3 == valueI) m)) : indicesEscalera ((s,succ val), ind) m
+            |otherwise = []
 
-
+eliminarCartaMesaInd :: Mesa -> Integer -> Mesa 
+eliminarCartaMesaInd [] _ = []
+eliminarCartaMesaInd m ind = filter (\(_,val) -> val/= ind) m 
 
 llevarCartonEscalera :: Game -> Game 
 llevarCartonEscalera gm@(Game j1@(Jugador crt1 _ _) j2@(Jugador crt2 _ _) board@(x:xs) tn _ _)
             | tn == 1 = case aplicaPrimero x xs of 0 -> gm
-                                                   1 -> gm{board = foldl eliminarCartaMesaInd xs (indicesEscalera x xs ++ encontrarCartaSuma x xs) , j1{ carton = length(indicesEscalera x xs : encontrarCartaSuma x xs) + crt1 + 1} }   --Eliminar cartaMesa debe coger una Mesa y carta
-                                                   2 -> gm{board = foldl eliminarCartaMesaInd xs (indicesEscalera x xs ++ (encontrarCartaIdentica x xs) : [] ), j1{ carton = length(indicesEscalera x xs ++ (encontrarCartaIdentica x xs) : [] ) + crt1 + 1} }
+                                                   1 -> gm{mesaDeJuego = foldl eliminarCartaMesaInd xs (quitarZeros(indicesEscalera x xs) ++ encontrarCartaSuma x xs) ,jugador1 = j1{ carton = toInteger(length(quitarZeros(indicesEscalera x xs) ++ encontrarCartaSuma x xs)) + crt1 + 1} }   --Eliminar cartaMesa debe coger una Mesa y carta
+                                                   2 -> gm{mesaDeJuego = foldl eliminarCartaMesaInd xs (quitarZeros(indicesEscalera x xs) ++ (encontrarCartaIdentica x xs) : [] ), jugador1 = j1{ carton = toInteger(length(quitarZeros(indicesEscalera x xs) ++ (encontrarCartaIdentica x xs) : [] )) + crt1 + 1} }
             | otherwise = case aplicaPrimero x xs of 0 -> gm
-                                                     1 -> gm{board = foldl eliminarCartaMesaInd xs (indicesEscalera x xs ++ encontrarCartaSuma x xs) , j2{ carton = length(indicesEscalera x xs : encontrarCartaSuma x xs) + crt2 + 1} }   --Eliminar cartaMesa debe coger una Mesa y carta
-                                                     2 -> gm{board = foldl eliminarCartaMesaInd xs (indicesEscalera x xs ++ (encontrarCartaIdentica x xs) : [] ), j2{ carton = length(indicesEscalera x xs ++ (encontrarCartaIdentica x xs) : [] ) + crt2 + 1} }
+                                                     1 -> gm{mesaDeJuego = foldl eliminarCartaMesaInd xs (quitarZeros(indicesEscalera x xs) ++ encontrarCartaSuma x xs) , jugador2 = j2{ carton = toInteger(length(quitarZeros(indicesEscalera x xs) ++ encontrarCartaSuma x xs)) + crt2 + 1} }   --Eliminar cartaMesa debe coger una Mesa y carta
+                                                     2 -> gm{mesaDeJuego = foldl eliminarCartaMesaInd xs (quitarZeros(indicesEscalera x xs) ++ (encontrarCartaIdentica x xs) : [] ), jugador2 = j2{ carton = toInteger(length(quitarZeros(indicesEscalera x xs) ++ (encontrarCartaIdentica x xs) : [] )) + crt2 + 1} }
             where aplicaPrimero card tablero 
-                        | encontrarCartaSuma == [] = if encontrarCartaIdentica == 0 then 3 else 2
+                        | encontrarCartaSuma x xs == [] = if encontrarCartaIdentica x xs == 0 then 3 else 2
                         | otherwise = 1
+                  quitarZeros l = filter (\ele -> ele /= 0) l
+
+
+limpiaMesa :: Game -> Game
+limpiaMesa gm@(Game _ _  board tn act _)
+    | act == 1 = gm
+    | otherwise = actTo1(case vaciaMesayn(llevarCartonEscalera gm) of True -> masDos(llevarCartonEscalera(gm))
+                                                                      False -> llevarCartonEscalera(gm))
+    where  vaciaMesayn game@(Game _ _ board _ _ _) = board == []
+           masDos game@(Game j1@(Jugador _ _ puntos1) j2@(Jugador _ _ puntos2) _ turno _ _) 
+                | turno == 1 = game{jugador1 = j1{puntos = puntos1 +2}}
+                | otherwise = game{jugador2 = j2{puntos = puntos2 +2}}
+           actTo1 gameTmp@(Game _ _ _ _ _ _) =  gameTmp{action = 1}
 
 
