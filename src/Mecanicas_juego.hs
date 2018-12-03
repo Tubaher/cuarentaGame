@@ -96,7 +96,8 @@ acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _
 
 sumas :: Carta -> Baraja -> [[Carta]]
 sumas c mazo = quitarReciprocos([[x,y] | x<-mazo, y<-mazo, x /= y, snd(x) + snd(y) == snd(c), snd(x) + snd(y) <= 7])
-        where quitarReciprocos l@(x:xs) = x : quitarReciprocos(filter (\duo -> duo /= reverse(x)) xs)  
+        where   quitarReciprocos [] = []
+                quitarReciprocos l@(x:xs) = x : quitarReciprocos(filter (\duo -> duo /= reverse(x)) xs)  
 {-
 acumularCarton :: Game -> Game
 acumularCarton gm@(Game j1@(Jugador contcarton1 _ _) j2@(Jugador contcarton2 _ _) board tn)
